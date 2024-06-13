@@ -1,9 +1,6 @@
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import "./style.css";
 import * as THREE from "three";
-// import javascriptLogo from './javascript.svg'
-// import viteLogo from '/vite.svg'
-// import { setupCounter } from './counter.js'
 
 //SCENE = container
 const scene = new THREE.Scene();
@@ -31,9 +28,7 @@ renderer.render(scene, camera);
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
 
 //MATERIAL like the wrapping paper for an object
-const material = new THREE.MeshStandardMaterial({
-  color: 0xff6347,
-});
+const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
 
 //MESH by combining geometry and material
 const torus = new THREE.Mesh(geometry, material);
@@ -41,13 +36,12 @@ const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
 //LIGHTNING
-
 //Point = light based on position
-const pointLight = new THREE.PointLight(0xffffff); // 0x = hexadecimal literal
-pointLight.position.set(5, 5, 5);
+const pointLight = new THREE.PointLight(0xffffff, 150, 100); // 0x = hexadecimal literal
+pointLight.position.set(0, 0, 0);
 
 //Ambient = light everything in the scene equaly
-const ambientLight = new THREE.AmbientLight(0xffffff);
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(pointLight, ambientLight);
 
 //Helper = showing the position of the light
@@ -57,7 +51,34 @@ scene.add(lightHelper, gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-//GRID
+function randomStar() {
+  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
+  const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const star = new THREE.Mesh(geometry, material);
+
+  //generate random number for xyz position on range of -100 to 100
+  const [x, y, z] = Array(3)
+    .fill()
+    .map(() => THREE.MathUtils.randFloatSpread(100));
+  star.position.set(x, y, z);
+  scene.add(star);
+}
+
+//adding 200 random star
+Array(200).fill().forEach(randomStar);
+
+// //background texture
+// const spaceTexture = new THREE.TextureLoader().load("sky.jpg");
+// scene.background = spaceTexture;
+
+//avatar
+const profilePictTexture = new THREE.TextureLoader().load("profile-pict.jpg");
+
+const profilePict = new THREE.Mesh(
+  new THREE.BoxGeometry(3, 3, 3),
+  new THREE.MeshBasicMaterial({ map: profilePictTexture })
+);
+scene.add(profilePict);
 
 function animate() {
   requestAnimationFrame(animate);
