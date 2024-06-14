@@ -45,9 +45,9 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 scene.add(pointLight, ambientLight);
 
 //Helper = showing the position of the light
-const lightHelper = new THREE.PointLightHelper(pointLight);
-const gridHelper = new THREE.GridHelper(200, 50);
-scene.add(lightHelper, gridHelper);
+// const lightHelper = new THREE.PointLightHelper(pointLight);
+// const gridHelper = new THREE.GridHelper(200, 50);
+// scene.add(lightHelper, gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -71,14 +71,45 @@ Array(200).fill().forEach(randomStar);
 // const spaceTexture = new THREE.TextureLoader().load("sky.jpg");
 // scene.background = spaceTexture;
 
-//avatar
+//avatar object
 const profilePictTexture = new THREE.TextureLoader().load("profile-pict.jpg");
 
+//texture mapping
 const profilePict = new THREE.Mesh(
   new THREE.BoxGeometry(3, 3, 3),
   new THREE.MeshBasicMaterial({ map: profilePictTexture })
 );
 scene.add(profilePict);
+
+//cloud object
+const cloudTexture = new THREE.TextureLoader().load("cloud-1.jpg");
+
+//texture mapping
+const cloud = new THREE.Mesh(
+  new THREE.SphereGeometry(3, 32, 32),
+  new THREE.MeshBasicMaterial({
+    map: cloudTexture,
+    // normalMap:
+  })
+);
+scene.add(cloud);
+cloud.position.z = 30;
+cloud.position.setX(-10);
+
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top;
+  cloud.rotation.x += 0.05;
+  cloud.rotation.y += 0.075;
+  cloud.rotation.z += 0.05;
+
+  profilePict.rotation.y += 0.01;
+  profilePict.rotation.z += 0.01;
+
+  camera.position.x = t * -0.0002;
+  camera.position.y = t * -0.01;
+  camera.position.z = t * -0.0002;
+}
+document.body.onscroll = moveCamera;
 
 function animate() {
   requestAnimationFrame(animate);
